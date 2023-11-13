@@ -1,14 +1,17 @@
 import { useState } from "react";
+interface Props {
+  items: string[];
+  heading: string;
+}
 
-function ListGroup() {
-  const cars = ["Tesla", "Fiat", "Toyota", "Suzuki", "Skoda"];
+function ListGroup({ items, heading }: Props) {
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
   return (
     <>
-      <h3 className="ml-3">List items</h3>
+      <h3 className="ml-3">{heading}</h3>
       <ul className="list-group">
-        {cars.map((item, index) => (
+        {items.map((item, index) => (
           <li
             className={
               selectedIndex === index
