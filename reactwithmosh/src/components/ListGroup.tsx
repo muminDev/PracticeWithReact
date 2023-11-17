@@ -1,34 +1,18 @@
-import { useState } from "react";
-interface Props {
-  items: string[];
-  heading: string;
-}
+function Listgroup() {
+  const cities = ["Ottava", "Berlin", "Munich", "Warsaw", "Paris"];
 
-function ListGroup({ items, heading }: Props) {
-  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const renderedList = cities.map((item, index) => (
+    <li key={index} className="list-group-item">
+      {item}
+    </li>
+  ));
 
   return (
     <>
-      <h3 className="ml-3">{heading}</h3>
-      <ul className="list-group">
-        {items.map((item, index) => (
-          <li
-            className={
-              selectedIndex === index
-                ? "list-group-item active"
-                : "list-group-item"
-            }
-            key={item}
-            onClick={() => {
-              setSelectedIndex(index);
-            }}
-          >
-            {item}
-          </li>
-        ))}
-      </ul>
+      <h1>Cities</h1>
+      <ul className="list-group">{renderedList}</ul>
     </>
   );
 }
 
-export default ListGroup;
+export default Listgroup;
