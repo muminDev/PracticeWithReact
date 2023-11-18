@@ -1,9 +1,13 @@
 import { useState } from "react";
 
-function Listgroup() {
-  const cities = ["Ottava", "Berlin", "Munich", "Warsaw", "Paris"];
+interface Props {
+  items: string[];
+  heading: string;
+}
+
+function Listgroup({ items, heading }: Props) {
   const [selectedItem, setSelectedItem] = useState(-1);
-  const renderedList = cities.map((item, index) => (
+  const renderedList = items.map((item, index) => (
     <li
       key={index}
       className={
@@ -19,8 +23,8 @@ function Listgroup() {
 
   return (
     <>
-      <h1>Cities</h1>
-      {cities.length === 0 && <p>no items found</p>}
+      <h1>{heading}</h1>
+      {items.length === 0 && <p>no items found</p>}
       <ul className="list-group">{renderedList}</ul>
     </>
   );

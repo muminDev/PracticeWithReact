@@ -1,9 +1,10 @@
 import Listgroup from "./components/ListGroup.tsx";
 
 function App() {
+  const cities = ["Ottava", "Berlin", "Munich", "Warsaw", "Paris"];
   return (
     <div>
-      <Listgroup />
+      <Listgroup items={cities} heading="Cities" />
     </div>
   );
 }
