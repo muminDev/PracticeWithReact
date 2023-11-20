@@ -6,7 +6,7 @@ interface AlertProps {
 const alert = ({ children, onClose }: AlertProps) => {
   return (
     <div
-      className="alert alert-secondary alert-dismissible fade show"
+      className="alert alert-secondary alert-dismissible fade show m-3"
       role="alert"
     >
       {children}
