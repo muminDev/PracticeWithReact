@@ -1,33 +1,38 @@
-import { useState } from "react";
+import styled from "styled-components";
+
+// styling componenets
+const List = styled.ul`
+  margin: 30px;
+  padding: 0px;
+  border: none;
+`;
+
+const ListItems = styled.li`
+  padding: 15px;
+  list-style: none;
+  border: solid 1px black;
+  margin: 8px;
+  border-radius: 8px;
+
+  &:hover {
+    background-color: lightgray; /* Define the style changes on hover */
+    cursor: pointer; /* Optional: Change cursor on hover */
+  }
+`;
 
 interface Props {
   items: string[];
   heading: string;
-  onSelectItem: (item: string) => void;
 }
 
-function Listgroup({ items, heading, onSelectItem }: Props) {
-  const [selectedItem, setSelectedItem] = useState(-1);
-  const renderedList = items.map((item, index) => (
-    <li
-      key={index}
-      className={
-        selectedItem === index ? "list-group-item active" : "list-group-item"
-      }
-      onClick={() => {
-        setSelectedItem(index);
-        onSelectItem(item);
-      }}
-    >
-      {item}
-    </li>
-  ));
+function Listgroup({ items, heading }: Props) {
+  const renderedList = items.map((item) => <ListItems>{item}</ListItems>);
 
   return (
     <>
       <h1>{heading}</h1>
       {items.length === 0 && <p>no items found</p>}
-      <ul className="list-group">{renderedList}</ul>
+      <List>{renderedList}</List>
     </>
   );
 }

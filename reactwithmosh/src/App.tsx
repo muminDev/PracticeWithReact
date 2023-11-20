@@ -1,8 +1,10 @@
 import { useState } from "react";
-import Alert from "./components/alert.tsx";
-import Button from "./components/buttons.tsx";
+import Alert from "./components/Alert.tsx";
+import Button from "./components/Buttons.tsx";
+import Listgroup from "./components/ListGroup.tsx";
 
 function App() {
+  const items = ["Warsaw", "Berlin", "Ottava", "Munich"];
   const [alertVisibility, setAlertVisibility] = useState(false);
   return (
     <div>
@@ -18,6 +20,7 @@ function App() {
           setAlertVisibility(true);
         }}
       />
+      <Listgroup items={items} heading="Cities" />
     </div>
   );
 }
