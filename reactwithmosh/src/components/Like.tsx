@@ -1,4 +1,5 @@
 import { FaHeart } from "react-icons/fa";
+import { FaRegHeart } from "react-icons/fa";
 import { useState } from "react";
 
 interface LikeProps {
@@ -12,15 +13,27 @@ function Like({ size = 24 }: LikeProps) {
     setLiked(!liked);
   };
 
-  return (
-    <>
-      <FaHeart
-        size={size}
-        onClick={toggleLike}
-        style={{ cursor: "pointer", color: liked ? "red" : "inherit" }}
-      />
-    </>
-  );
+  if (liked === true) {
+    return (
+      <>
+        <FaHeart
+          size={size}
+          onClick={toggleLike}
+          style={{ cursor: "pointer", color: "red" }}
+        />
+      </>
+    );
+  } else {
+    return (
+      <>
+        <FaRegHeart
+          size={size}
+          onClick={toggleLike}
+          style={{ cursor: "pointer" }}
+        />
+      </>
+    );
+  }
 }
 
 export default Like;
