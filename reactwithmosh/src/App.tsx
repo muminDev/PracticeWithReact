@@ -2,6 +2,8 @@ import { useState } from "react";
 import Alert from "./components/Alert.tsx";
 import Button from "./components/Buttons.tsx";
 import Listgroup from "./components/ListGroup.tsx";
+import { AiFillAmazonCircle } from "react-icons/ai";
+import Like from "./components/Like.tsx";
 
 function App() {
   const items = ["Warsaw", "Berlin", "Ottava", "Munich"];
@@ -21,6 +23,8 @@ function App() {
         }}
       />
       <Listgroup items={items} heading="Cities" />
+      <AiFillAmazonCircle size="40" style={{ marginLeft: "30px" }} />
+      <Like size={30} />
     </div>
   );
 }
