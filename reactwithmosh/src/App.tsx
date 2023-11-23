@@ -5,6 +5,7 @@ import Listgroup from "./components/ListGroup.tsx";
 import { AiFillAmazonCircle } from "react-icons/ai";
 import Like from "./components/Like.tsx";
 import NavBar from "./components/NavBar.tsx";
+import Form from "./components/form.tsx";
 
 function App() {
   const items = ["Warsaw", "Berlin", "Ottava", "Munich"];
@@ -32,6 +33,7 @@ function App() {
       <AiFillAmazonCircle size="40" style={{ marginLeft: "30px" }} />
       <Like size={30} />
       <NavBar CartCount={quantity} OnClickHandler={increaseQuantity} />
+      <Form />
     </div>
   );
 }
