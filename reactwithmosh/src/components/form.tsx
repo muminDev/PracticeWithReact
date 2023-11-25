@@ -1,6 +1,18 @@
 import { FormEvent, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+const Schema = z.object({
+  name: z.string().min(3),
+  age: z.number().min(18),
+});
+
+type FormData = z.infer<typeof Schema>;
 
 const Form = () => {
+  const form = useForm();
+  console.log(form);
+
   const nameRef = useRef<HTMLInputElement | null>(null);
   const ageRef = useRef<HTMLInputElement | null>(null);
   const [formData, setFormData] = useState<{ name: string; age: number }[]>([]);
