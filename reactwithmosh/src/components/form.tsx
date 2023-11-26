@@ -58,6 +58,7 @@ const Form = () => {
             <p className="text-danger">{errors.amount.message}</p>
           )}
         </div>
+
         <button type="submit" className="btn btn-primary">
           Submit
         </button>
