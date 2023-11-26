@@ -1,54 +1,62 @@
-import { FormEvent, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const Schema = z.object({
-  name: z.string().min(3),
-  age: z.number().min(18),
+  description: z
+    .string()
+    .min(3, { message: "Description must be at least 3 characters" }),
+  amount: z
+    .number({ invalid_type_error: "Amount field is required" })
+    .int()
+    .min(18), // Adjusted to accept integer numbers only
 });
 
 type FormData = z.infer<typeof Schema>;
 
 const Form = () => {
-  const form = useForm();
-  console.log(form);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(Schema),
+  });
 
-  const nameRef = useRef<HTMLInputElement | null>(null);
-  const ageRef = useRef<HTMLInputElement | null>(null);
-  const [formData, setFormData] = useState<{ name: string; age: number }[]>([]);
-
-  const handleSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    if (nameRef.current && ageRef.current) {
-      const newName = nameRef.current.value;
-      const newAge = parseInt(ageRef.current.value, 10); // Parse age as an integer
-
-      // Update the state with new form data
-      setFormData((prevFormData) => [
-        ...prevFormData,
-        { name: newName, age: newAge },
-      ]);
-
-      // Clear the input fields after submission
-      nameRef.current.value = "";
-      ageRef.current.value = "";
-    }
+  const onSubmit = (data: FormData) => {
+    console.log("Form data:", data);
   };
-  console.log(formData);
+
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-3">
-          <label htmlFor="name" className="form-label">
-            Name
+          <label htmlFor="description" className="form-label">
+            Description
           </label>
-          <input ref={nameRef} id="name" type="text" className="form-control" />
+          <input
+            {...register("description")}
+            id="description"
+            type="text"
+            className="form-control"
+          />
+          {errors.description && (
+            <p className="text-danger">{errors.description.message}</p>
+          )}
         </div>
         <div className="mb-3">
-          <label htmlFor="age" className="form-label">
-            Age
+          <label htmlFor="amount" className="form-label">
+            Amount
           </label>
-          <input ref={ageRef} id="age" type="number" className="form-control" />
+          <input
+            {...register("amount", { valueAsNumber: true })}
+            id="amount"
+            type="text"
+            className="form-control"
+          />
+          {errors.amount && (
+            <p className="text-danger">{errors.amount.message}</p>
+          )}
         </div>
         <button type="submit" className="btn btn-primary">
           Submit
