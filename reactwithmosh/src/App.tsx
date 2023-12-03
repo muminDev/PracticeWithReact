@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Alert from "./components/Alert.tsx";
 import Button from "./components/Buttons.tsx";
 import Listgroup from "./components/ListGroup.tsx";
@@ -10,12 +10,40 @@ import ExpenseList from "./expense-tracker/components/ExpenseList.tsx";
 import ExpenceFilter from "./expense-tracker/components/ExpenceFilter.tsx";
 import ExpenseForm from "./expense-tracker/ExpenseForm.tsx";
 //import categories from "./expense-tracker/categories.ts";
+import axios, { AxiosError } from "axios";
+
+interface User {
+  id: number;
+  name: string;
+}
 
 function App() {
   const items = ["Warsaw", "Berlin", "Ottava", "Munich"];
   const [alertVisibility, setAlertVisibility] = useState(false);
   const [quantity, setQuantity] = useState(0); // Using state to manage quantity
+  const [users, setUsers] = useState<User[]>([]);
+  const [error, setError] = useState("");
 
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await axios.get<User[]>(
+          "https://jsonplaceholder.typicode.com/users"
+        );
+        setUsers(res.data);
+      } catch (err) {
+        setError((err as AxiosError).message);
+      }
+    };
+
+    fetchUsers();
+    //.then((res) => setUsers(res.data))
+    //.catch((err) => {
+    //console.log(err.message);
+    //
+    // });
+  }, []);
+  console.log(users);
   const increaseQuantity = () => {
     setQuantity((prevQuantity) => prevQuantity + 1);
   };
@@ -50,6 +78,12 @@ function App() {
 
   return (
     <div>
+      {error && <p className="text-danger">{error}</p>}
+      <ul>
+        {users.map((user) => (
+          <li key={user.id}>{user.name}</li>
+        ))}
+      </ul>
       {alertVisibility && (
         <Alert onClose={() => setAlertVisibility(false)}>
           Please check your internet !
