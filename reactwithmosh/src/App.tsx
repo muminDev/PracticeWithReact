@@ -10,7 +10,7 @@ import ExpenseList from "./expense-tracker/components/ExpenseList.tsx";
 import ExpenceFilter from "./expense-tracker/components/ExpenceFilter.tsx";
 import ExpenseForm from "./expense-tracker/ExpenseForm.tsx";
 //import categories from "./expense-tracker/categories.ts";
-import axios, { AxiosError } from "axios";
+import axios, { CanceledError } from "axios";
 
 interface User {
   id: number;
@@ -23,27 +23,31 @@ function App() {
   const [quantity, setQuantity] = useState(0); // Using state to manage quantity
   const [users, setUsers] = useState<User[]>([]);
   const [error, setError] = useState("");
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const res = await axios.get<User[]>(
-          "https://jsonplaceholder.typicode.com/users"
-        );
-        setUsers(res.data);
-      } catch (err) {
-        setError((err as AxiosError).message);
-      }
-    };
+    const controller = new AbortController();
 
-    fetchUsers();
-    //.then((res) => setUsers(res.data))
-    //.catch((err) => {
-    //console.log(err.message);
-    //
-    // });
+    setLoading(true);
+    axios
+      .get<User[]>("https://jsonplaceholder.typicode.com/users", {
+        signal: controller.signal,
+      })
+      .then((res) => {
+        setUsers(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        if (err instanceof CanceledError) return;
+        setError(err.message);
+        setLoading(false);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+    return () => controller.abort();
   }, []);
-  console.log(users);
+
   const increaseQuantity = () => {
     setQuantity((prevQuantity) => prevQuantity + 1);
   };
@@ -79,6 +83,7 @@ function App() {
   return (
     <div>
       {error && <p className="text-danger">{error}</p>}
+      {isLoading && <div className="spinner-border"></div>}
       <ul>
         {users.map((user) => (
           <li key={user.id}>{user.name}</li>
