@@ -10,7 +10,7 @@ import ExpenseList from "./expense-tracker/components/ExpenseList.tsx";
 import ExpenceFilter from "./expense-tracker/components/ExpenceFilter.tsx";
 import ExpenseForm from "./expense-tracker/ExpenseForm.tsx";
 //import categories from "./expense-tracker/categories.ts";
-import axios, { CanceledError } from "axios";
+import apiClient, { CanceledError } from "./services/api-client.ts";
 
 interface User {
   id: number;
@@ -28,20 +28,18 @@ function App() {
     const originalUsers = [...users];
     setUsers(users.filter((u) => u.id !== user.id));
 
-    axios
-      .delete("https://jsonplaceholder.typicode.com/susers/" + user.id)
-      .catch((err) => {
-        setError(err.message);
-        setUsers(originalUsers);
-      });
+    apiClient.delete("apiClient/users/" + user.id).catch((err) => {
+      setError(err.message);
+      setUsers(originalUsers);
+    });
   };
 
   useEffect(() => {
     const controller = new AbortController();
 
     setLoading(true);
-    axios
-      .get<User[]>("https://jsonplaceholder.typicode.com/users", {
+    apiClient
+      .get<User[]>("/users", {
         signal: controller.signal,
       })
       .then((res) => {
@@ -91,10 +89,32 @@ function App() {
     },
   ]);
 
+  const addUser = () => {
+    const newUser = { id: 0, name: "Mosh" };
+    setUsers([...users, newUser]);
+
+    apiClient
+      .post("/users", newUser)
+      .then((res) => setUsers([res.data, ...users]));
+  };
+
+  const updateUser = (user: User) => {
+    const updatedUser = { ...user, name: user.name + " !!!" };
+    const originalUsers = [...users];
+    setUsers(users.map((u) => (u.id === user.id ? updatedUser : u)));
+
+    apiClient.patch("/users/" + user.id, updatedUser).catch((err) => {
+      setError(err.message);
+      setUsers(originalUsers);
+    });
+  };
   return (
     <div>
       {error && <p className="text-danger">{error}</p>}
       {isLoading && <div className="spinner-border"></div>}
+      <button className="btn btn-primary mb-3" onClick={addUser}>
+        Add
+      </button>
       <ul className="list-group">
         {users.map((user) => (
           <li
@@ -102,12 +122,22 @@ function App() {
             className="list-group-item d-flex justify-content-between"
           >
             {user.name}
-            <button
-              className="btn btn-outline-danger"
-              onClick={() => deleteUser(user)}
-            >
-              Delete
-            </button>
+            <div>
+              <button
+                className="btn btn-outline-secondary"
+                onClick={() => {
+                  updateUser(user);
+                }}
+              >
+                Update
+              </button>
+              <button
+                className="btn btn-outline-danger mx-2"
+                onClick={() => deleteUser(user)}
+              >
+                Delete
+              </button>
+            </div>
           </li>
         ))}
       </ul>
